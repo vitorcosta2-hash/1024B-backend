@@ -1,3 +1,4 @@
+
 import mysql from 'mysql2/promise';
 import express from 'express';
 const app = express()
@@ -5,135 +6,124 @@ app.use(express.json())
 const connection = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    database: 'aula1',
+    database: 'dbteremercado',
 });
-app.get("/listar_produtos", async (req, res) => {
-    try {
-        const [resultado, campos] =
-            await connection.execute(`SELECT * FROM produto`)
-        console.log(resultado)
-        res.status(200).json(resultado)
-    } catch (err) {
-        console.log(err);
-        if (err instanceof Error && 'code' in err && err.code === 'ECONNREFUSED') {
-            res.status(500).json({ mensagem: "Erro: Ligue o LARAGON!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_BAD_DB_ERROR') {
-            res.status(500).json({ mensagem: "Erro: Crie o banco de dados ou confira se o nome está correto!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_ACCESS_DENIED_ERROR') {
-            res.status(500).json({ mensagem: "Erro: Confira o Usuario e Senha da Conexão!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_NO_SUCH_TABLE') {
-            res.status(500).json({ mensagem: "Erro: Confira o nome da tabela no banco ou crie a tabela!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_PARSE_ERROR') {
-            res.status(500).json({ mensagem: "Erro: Confira o código SQL do EXECUTE!" })
-        }
-        else {
-            res.status(500).json({ mensagem: "Erro no servidor!" })
-        }
-    }
-})//listar
-app.post("/cadastro_produto", async (req, res) => {
-    try {
-        //const preparacao = await connection.prepare("select * from pessoa");
-        const {id,nome,categoria,preco,data_criacao,data_modificacao  } = req.body;
-        //Valide se o id e o nome foram passados corretamente. (Algum valor)
-        //Se não foram, retorne o código 400 com a mensagem "id ou nome inválidos"
-        //Não deixe o código executar a parte de baixo quando for inválido.
 
-        if (!id || !nome || !categoria || !preco || !data_criacao || !data_modificacao) {
-            return res.status(500).json({ mensagem: "id, nome, categoria, preco, data_criacao e data_modificacao são obrigatórios!" })
-            
-        }
-        const [resultado] =
-            await connection.execute(`insert into produto values (?,?,?,?,?,?)`, [id, nome, categoria, preco, data_criacao, data_modificacao])
-        console.log(resultado)
-        res.status(201).json({ mensagem: "Sucesso" })
-    } catch (err) {
-        console.log(err);
-        if (err instanceof Error && 'code' in err && err.code === 'ECONNREFUSED') {
-            res.status(500).json({ mensagem: "Erro: Ligue o LARAGON!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_BAD_DB_ERROR') {
-            res.status(500).json({ mensagem: "Erro: Crie o banco de dados ou confira se o nome está correto!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_ACCESS_DENIED_ERROR') {
-            res.status(500).json({ mensagem: "Erro: Confira o Usuario e Senha da Conexão!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_NO_SUCH_TABLE') {
-            res.status(500).json({ mensagem: "Erro: Confira o nome da tabela no banco ou crie a tabela!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_PARSE_ERROR') {
-            res.status(500).json({ mensagem: "Erro: Confira o código SQL do EXECUTE!" })
-        }
-        else {
-            res.status(500).json({ mensagem: "Erro no servidor!" })
-        }
-    }
-})//Inserir
+// 1......
+// Crie uma rota '\cliente_data_pedido' que retorne os clientes e a data que os mesmos fizeram 
+// o pedido. Para realizar isso, utilize o comando inner join para juntar as tabelas. 
+// Utilize o banco de dados chamado  dbteremercado
 
-app.get("/listar_produtos_informatica", async (req, res) => {
+// SELECT nome,datapedido FROM clientes c INNER JOIN pedidos p ON c.idclientes=p.clientes_idclientes
+
+// 2 Crie uma rota chamada '\pedidos_2026' que retorne 
+// idclientes, nome, cidade, idade,idpedidos,datapedido dos pedidos feitos no ano
+// de 2026.
+
+// 3.Crie uma rota chamada '\quantidade_pedidos' que retorne 
+// um json no formato '{quantidade_pedidos:100}' com a quantidade de pedidos cadastrados
+// na tabela pedidos. USE O COMANDO COUNT(*) para contar as quantidades.
+
+// 4 Crie uma rota chamada '\quantidade_pedidos_clientes' que retorne
+// um json no formato '[{nome:"tere",quantidade_pedidos:1000}]' que retorne 
+// todos os clientes e a quantidade de pedidos que cada cliente fez
+
+
+//   5) ROTA    /quantidade_produtos_por_cliente
+//   Crie um código que retorne o nome do cliente e a quantidade de produtos que cada pedido tem
+//    formato    [{nome:"Nome Cliente",idpedido:1,quantidade_produtos:1000}]
+// 
+//  6)    /valor_pedido_total
+// Crie um código que retorne o nome do cliente e o valor total de cada pedido
+//  [{nome:"Nome Cliente",valor_total:1000}]
+
+
+app.get("/cliente_data_pedido", async (req, res) => {
     try {
-        const [resultado, campos] =
-            await connection.execute(`SELECT * FROM produto WHERE categoria = 'informatica'`);
-        console.log(resultado)
-        res.status(200).json(resultado)
+        const [resultado] = await connection.execute(` SELECT c.nome, p.datapedido FROM clientes c INNER JOIN pedidos p ON c.idclientes = p.clientes_idclientes `);
+
+        res.status(200).json(resultado);
     } catch (err) {
         console.log(err);
-        if (err instanceof Error && 'code' in err && err.code === 'ECONNREFUSED') {
-            res.status(500).json({ mensagem: "Erro: Ligue o LARAGON!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_BAD_DB_ERROR') {
-            res.status(500).json({ mensagem: "Erro: Crie o banco de dados ou confira se o nome está correto!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_ACCESS_DENIED_ERROR') {
-            res.status(500).json({ mensagem: "Erro: Confira o Usuario e Senha da Conexão!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_NO_SUCH_TABLE') {
-            res.status(500).json({ mensagem: "Erro: Confira o nome da tabela no banco ou crie a tabela!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_PARSE_ERROR') {
-            res.status(500).json({ mensagem: "Erro: Confira o código SQL do EXECUTE!" })
-        }
-        else {
-            res.status(500).json({ mensagem: "Erro no servidor!" })
-        }
+        res.status(500).json({ mensagem: "Erro no servidor!" });
     }
+});
+
+app.get("/pedidos_2026", async (req, res) => {
+    try {
+        const [resultado] = await connection.execute(`SELECT  c.idclientes, c.nome, c.cidade,c.idade,    p.idpedidos,    p.datapedido  FROM clientes c INNER JOIN pedidos p  ON c.idclientes = p.clientes_idclientes WHERE YEAR(p.datapedido) = 2026
+    `);
+
+        res.status(200).json(resultado);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ mensagem: "Erro no servidor!" });
+    }
+});
+
+app.get("/quantidade_pedidos", async (req, res) => {
+  try {
+    const [resultado] = await connection.execute(`
+      SELECT COUNT(*) AS quantidade_pedidos FROM pedidos`) as any;
+
+    res.status(200).json(resultado[0]); 
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ mensagem: "Erro no servidor!" });
+  }
+});
+
+app.get("/quantidade_pedidos_clientes", async (req, res) => {
+  try {
+    const [resultado] = await connection.execute(`SELECT c.nome, COUNT(p.idpedidos) AS quantidade_pedidosFROM clientes c INNER JOIN pedidos p  ON c.idclientes = p.clientes_idclientes GROUP BY c.nome
+    `);
+
+    res.status(200).json(resultado);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ mensagem: "Erro no servidor!" });
+  }
+});
+
+app.get("/quantidade_produtos_por_cliente", async (req, res) => {
+  try {
+    const [resultado] = await connection.execute(`
+      SELECT
+        c.nome,
+        p.idpedidos AS idpedido,
+        SUM(i.quantidade) AS quantidade_produtos
+      FROM clientes c
+      INNER JOIN pedidos p ON c.idclientes = p.clientes_idclientes
+      INNER JOIN itenspedidos i ON p.idpedidos = i.pedidos_idpedidos
+      GROUP BY c.nome, p.idpedidos
+    `)
+
+    res.status(200).json(resultado)
+
+  } catch (erro) {
+    console.log(erro);
+    res.status(500).json({ mensagem: "Erro no servidor!" });
+  }
 })
 
-app.get("/listar_produtos_caros", async (req, res) => {
-    try {
-        const [resultado, campos] =
-            await connection.execute(`SELECT * FROM produto WHERE preco > 100`);
-        console.log(resultado)
-        res.status(200).json(resultado)
-    } catch (err) {
-        console.log(err);
-        if (err instanceof Error && 'code' in err && err.code === 'ECONNREFUSED') {
-            res.status(500).json({ mensagem: "Erro: Ligue o LARAGON!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_BAD_DB_ERROR') {
-            res.status(500).json({ mensagem: "Erro: Crie o banco de dados ou confira se o nome está correto!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_ACCESS_DENIED_ERROR') {
-            res.status(500).json({ mensagem: "Erro: Confira o Usuario e Senha da Conexão!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_NO_SUCH_TABLE') {
-            res.status(500).json({ mensagem: "Erro: Confira o nome da tabela no banco ou crie a tabela!" })
-        }
-        else if (err instanceof Error && 'code' in err && err.code === 'ER_PARSE_ERROR') {
-            res.status(500).json({ mensagem: "Erro: Confira o código SQL do EXECUTE!" })
-        }
-        else {
-            res.status(500).json({ mensagem: "Erro no servidor!" })
-        }
-    }
+app.get("/valor_pedido_total", async (req, res) => {
+  try {
+    const [resultado] = await connection.execute(`
+      SELECT   c.nome, p.idpedidos AS idpedido, SUM(i.quantidade * pr.preco) AS valor_total
+      FROM clientes c  INNER JOIN pedidos p ON c.idclientes = p.clientes_idclientes INNER JOIN itenspedidos i ON p.idpedidos = i.pedidos_idpedidos
+      INNER JOIN produtos pr ON i.produtos_idprodutos = pr.idprodutos GROUP BY c.nome, p.idpedidos
+    `)
+
+    res.status(200).json(resultado)
+} catch (erro) {
+    console.log(erro);
+    res.status(500).json({ mensagem: "Erro no servidor!" });
+  }
+  
 })
 
 
-//Criar o servidor
 app.listen(8000, () => {
-    console.log("Servidor iniciado na porta 8000")
+    console.log("Servidor rodando na porta 8000")
 })
+
