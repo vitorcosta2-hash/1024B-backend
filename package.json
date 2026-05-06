@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/matheusherculano-max/1024b-backend.git"
+    "url": "git+https://github.com/guilhermeterenciani/1024b-backend.git"
   },
   "keywords": [],
   "author": "",
@@ -18,16 +18,16 @@
   "bugs": {
     "url": "https://github.com/guilhermeterenciani/1024b-backend/issues"
   },
-  "homepage": "https://github.com/matheusherculano-max/1024b-backend#readme",
+  "homepage": "https://github.com/guilhermeterenciani/1024b-backend#readme",
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "mysql2": "^3.18.0"
+    "mysql2": "^3.22.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/node": "^25.5.2",
+    "@types/node": "^25.6.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
