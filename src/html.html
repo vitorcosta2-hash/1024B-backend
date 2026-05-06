@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Tere mercado</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .secao {
+      background: white;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .card {
+      background: #fafafa;
+      padding: 10px;
+      margin: 10px 0;
+      border-left: 5px solid #007bff;
+    }
+  </style>
+</head>
+<body>
+
+<h1>📊 Dashboard do Mercado</h1>
+
+<div class="secao">
+  <h2>Total de Pedidos</h2>
+  <div id="totalPedidos"></div>
+</div>
+
+<div class="secao">
+  <h2>Clientes e Datas</h2>
+  <div id="clienteData"></div>
+</div>
+
+<div class="secao">
+  <h2>Pedidos de 2026</h2>
+  <div id="pedidos2026"></div>
+</div>
+
+<div class="secao">
+  <h2>Pedidos por Cliente</h2>
+  <div id="pedidosCliente"></div>
+</div>
+
+<div class="secao">
+  <h2>Produtos por Pedido</h2>
+  <div id="produtosPedido"></div>
+</div>
+
+<div class="secao">
+  <h2>Valor Total dos Pedidos</h2>
+  <div id="valorPedido"></div>
+</div>
+
+<script>
+
+async function carregarTudo() {
+
+  // 1 - TOTAL PEDIDOS
+  const total = await fetch("http://localhost:8000/quantidade_pedidos")
+  const totalDados = await total.json()
+  document.getElementById("totalPedidos").innerHTML =
+    `<h3>${totalDados.quantidade_pedidos}</h3>`
+
+
+  // 2 - CLIENTE DATA
+  const cd = await fetch("http://localhost:8000/cliente_data_pedido")
+  const cdDados = await cd.json()
+  const divCD = document.getElementById("clienteData")
+
+  cdDados.forEach(item => {
+    divCD.innerHTML += `
+      <div class="card">
+        Nome: ${item.nome} <br>
+        Data: ${item.datapedido}
+      </div>
+    `
+  })
+
+
+  // 3 - PEDIDOS 2026
+  const p2026 = await fetch("http://localhost:8000/pedidos_2026")
+  const p2026Dados = await p2026.json()
+  const div2026 = document.getElementById("pedidos2026")
+
+  p2026Dados.forEach(item => {
+    div2026.innerHTML += `
+      <div class="card">
+        Nome: ${item.nome} <br>
+        Cidade: ${item.cidade} <br>
+        Idade: ${item.idade} <br>
+        Pedido: ${item.idpedidos} <br>
+        Data: ${item.datapedido}
+      </div>
+    `
+  })
+
+
+  // 4 - PEDIDOS POR CLIENTE
+  const pc = await fetch("http://localhost:8000/quantidade_pedidos_clientes")
+  const pcDados = await pc.json()
+  const divPC = document.getElementById("pedidosCliente")
+
+  pcDados.forEach(item => {
+    divPC.innerHTML += `
+      <div class="card">
+        Nome: ${item.nome} <br>
+        Pedidos: ${item.quantidade_pedidos}
+      </div>
+    `
+  })
+
+
+  // 5 - PRODUTOS POR PEDIDO
+  const pp = await fetch("http://localhost:8000/quantidade_produtos_por_cliente")
+  const ppDados = await pp.json()
+  const divPP = document.getElementById("produtosPedido")
+
+  ppDados.forEach(item => {
+    divPP.innerHTML += `
+      <div class="card">
+        Nome: ${item.nome} <br>
+        Pedido: ${item.idpedido} <br>
+        Produtos: ${item.quantidade_produtos}
+      </div>
+    `
+  })
+
+
+  // 6 - VALOR PEDIDO
+  const vp = await fetch("http://localhost:8000/valor_pedido_total")
+  const vpDados = await vp.json()
+  const divVP = document.getElementById("valorPedido")
+
+  vpDados.forEach(item => {
+    divVP.innerHTML += `
+      <div class="card">
+        Nome: ${item.nome} <br>
+        Pedido: ${item.idpedido} <br>
+        Total: R$ ${Number(item.valor_total).toFixed(2)}
+      </div>
+    `
+  })
+
+}
+
+carregarTudo()
+
+</script>
+
+</body>
+</html>

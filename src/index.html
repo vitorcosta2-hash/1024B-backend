@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <h1>Valor Total dos Pedidos</h1>
+  <div id="resultado"></div>
+
+  <script>
+    async function buscaDados() {
+      const resposta = await fetch('http://localhost:8000/valor_pedido_total')
+      const dados = await resposta.json()
+
+      console.log(dados)
+
+      const div = document.getElementById('resultado')
+
+      dados.forEach(item => {
+        div.innerHTML += `
+          <p>
+            Nome: ${item.nome} <br>
+            Pedido: ${item.idpedido} <br>
+            Total: R$ ${item.valor_total}
+          </p>
+          <hr>
+        `
+      })
+    }
+
+    buscaDados()
+  </script>
+
+</body>
+</html>
