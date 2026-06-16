@@ -13,11 +13,8 @@
     async function buscaDados() {
       const resposta = await fetch('http://localhost:8000/valor_pedido_total')
       const dados = await resposta.json()
-
       console.log(dados)
-
       const div = document.getElementById('resultado')
-
       dados.forEach(item => {
         div.innerHTML += `
           <p>
@@ -29,7 +26,6 @@
         `
       })
     }
-
     buscaDados()
   </script>
 
