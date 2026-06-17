@@ -155,12 +155,9 @@ app.post("/cadastro_multiplos_produtos", async (req, res) => {
       });
     }
 
-    // Percorre o array e cadastra os produtos
     for (const produto of produtos) {
-      await connection.execute(
-        `
-        INSERT INTO produtos ( idprodutos, nome, preco, categoria_idcategoria, data_criacao, data_modificacao  )
-        VALUES (?, ?, ?, ?, ?, ?)
+      await connection.execute( ` INSERT INTO produtos ( idprodutos, nome, preco, categoria_idcategoria, data_criacao, data_modificacao  )
+          VALUES (?, ?, ?, ?, ?, ?)
         `,
         [
           produto.idprodutos, produto.nome, produto.preco,  produto.categoria_idcategoria,  new Date(), null 

@@ -1,33 +1,61 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>CRUD de Produtos</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Valor Total dos Pedidos</h1>
-  <div id="resultado"></div>
 
-  <script>
-    async function buscaDados() {
-      const resposta = await fetch('http://localhost:8000/valor_pedido_total')
-      const dados = await resposta.json()
-      console.log(dados)
-      const div = document.getElementById('resultado')
-      dados.forEach(item => {
-        div.innerHTML += `
-          <p>
-            Nome: ${item.nome} <br>
-            Pedido: ${item.idpedido} <br>
-            Total: R$ ${item.valor_total}
-          </p>
-          <hr>
-        `
-      })
-    }
-    buscaDados()
-  </script>
+    <h1>📦 Cadastro de Produtos</h1>
+
+    <div class="formulario">
+        <input
+            type="text"
+            id="nome"
+            placeholder="Nome do produto"
+        >
+
+        <input
+            type="text"
+            id="categoria"
+            placeholder="Categoria"
+        >
+
+        <input
+            type="number"
+            id="preco"
+            placeholder="Preço"
+            step="0.01"
+        >
+
+        <button onclick="cadastrarProduto()">
+            Cadastrar Produto
+        </button>
+    </div>
+
+    <h2>Lista de Produtos</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Preço</th>
+                <th>Data Criação</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+
+        <tbody id="listaProdutos">
+            <!-- Produtos serão inseridos aqui -->
+        </tbody>
+    </table>
+
+    <script src="script.js"></script>
 
 </body>
 </html>
